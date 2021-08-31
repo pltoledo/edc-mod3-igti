@@ -46,7 +46,7 @@ class ImdbCleaner:
 
         self.df_cleaned = self.df_basics
         # Limpa os Inteiros
-        int_cols = ['startYear', 'endYear', 'runtimeMinutes']
+        int_cols = ['startYear', 'endYear', 'runtimeMinutes', 'isAdult']
         for c in int_cols:
             self.df_cleaned = (
                 self.df_cleaned
