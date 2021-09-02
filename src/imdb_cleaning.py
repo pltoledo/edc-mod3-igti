@@ -3,8 +3,18 @@ import pyspark.sql.types as t
 from unidecode import unidecode
 
 FILE_PATHS = {
-    'basics': 'data/tp/title_basics.tsv',
-    'ratings': 'data/tp/title_ratings.tsv'
+    'local': {
+        'basics': 'data/tp/title_basics.tsv',
+        'ratings': 'data/tp/title_ratings.tsv'
+        },
+    'cloud':{
+        'basics': 'gs://edc_bootamp_data/data/title_basics.tsv',
+        'ratings': 'gs://edc_bootamp_data/data/title_ratings.tsv',
+    }
+}
+SAVE_PATH = {
+    'local': 'data/imdb/title_basics_with_rating',
+    'cloud': 'gs://edc_bootamp_data/data/title_basics_with_rating',
 }
 
 @f.udf(returnType=t.StringType())
@@ -17,9 +27,10 @@ def unidecode_udf(string):
 
 class ImdbCleaner:
 
-    def __init__(self, spark_session):
+    def __init__(self, spark_session, exec_mode):
 
         self.spark = spark_session
+        self.exec_mode = exec_mode
         self.read_options = {
             'header': True, 
             'sep': '\t'
@@ -32,14 +43,14 @@ class ImdbCleaner:
             .read
             .format('csv')
             .options(**self.read_options)
-            .load(FILE_PATHS['basics'])
+            .load(FILE_PATHS[self.exec_mode]['basics'])
         )
         self.df_ratings = (
             self.spark
             .read
             .format('csv')
             .options(**self.read_options)
-            .load(FILE_PATHS['ratings'])
+            .load(FILE_PATHS[self.exec_mode]['ratings'])
         )
 
     def data_cleaning(self):
@@ -80,7 +91,7 @@ class ImdbCleaner:
             .write
             .format('parquet')
             .mode('overwrite')
-            .save('data/imdb/title_basics_with_rating')
+            .save(SAVE_PATH[self.exec_mode])
         )
     
     def clean(self):

@@ -1,13 +1,15 @@
 from pyspark.sql import SparkSession
-from imdb_cleaning import ImdbCleaner
+from src.imdb_cleaning import ImdbCleaner
+import sys
 
 if __name__ == "__main__":
-    spark = (
-        SparkSession
-        .builder
-        .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-        .getOrCreate()
-    )
-    cleaner = ImdbCleaner(spark)
-    cleaner.clean()
-    spark.stop()
+    if len(sys.argv) > 1:
+        spark = (
+            SparkSession
+            .builder
+            .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+            .getOrCreate()
+        )
+        cleaner = ImdbCleaner(spark, sys.argv[1])
+        cleaner.clean()
+        spark.stop()
