@@ -1,0 +1,1 @@
+gcloud dataproc jobs submit pyspark --cluster cluster-${PROJECT_ID} --region ${REGION} --py-files gs://{bucket}/scripts/src.zip gs://{bucket}/scripts/spark_app.py -- cloud
