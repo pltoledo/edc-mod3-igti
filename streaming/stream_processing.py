@@ -2,7 +2,7 @@ from pyspark.sql import SparkSession
 import pyspark.sql.functions as f
 
 spark = SparkSession.builder.getOrCreate()
-schema = spark.read.option("multiline","true").json('data/btc_stream/raw').schema
+schema = spark.read.option("multiline","true").json('data/btc_stream/sample_schema.json').schema
 
 def foreachBatch_save(df, batch_id):
     
