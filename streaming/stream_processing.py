@@ -41,4 +41,4 @@ if __name__ == "__main__":
         .foreachBatch(foreachBatch_save)
         .start()
     )
-    query.awaitTermination()
+    query.awaitTermination(300)
